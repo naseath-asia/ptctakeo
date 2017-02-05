@@ -1,0 +1,47 @@
+---
+
+- name: Install Packages
+  apt: name={{ item }} state=present
+  with_items: apache_packages
+
+- name: Add modules
+  apache2_module: name={{ item }} state=present
+  with_items: apache_modules
+
+- name: Configure fcgi timeout
+  lineinfile: dest=/etc/apache2/mods-available/fcgid.conf regexp="{{ item }}" insertafter="FcgidConnectTimeout" line="{{ item }}"
+  with_items:
+    - ' IPCCommTimeout 240'
+    - ' IPCConnectTimeout 300'
+    - ' ProcessLifeTime 7200'
+    - ' BusyTimeout 300'
+    - ' IdleTimeout 240'
+    - ' FcgidMaxRequestLen 100000000'
+    - ' FcgidMaxRequestsPerProcess 50'
+
+- name: Disable modules
+  apache2_module: name={{ item }} state=absent
+  with_items:
+     - php5
+
+- name: Remove default vhost
+  file: path=/etc/apache2/sites-enable/000-fefault.conf state=absent
+
+- name: Create Custom suexec
+  template: src=suexec-custom.j2 dest=/etc/apache2/suexec/www-data
+  notify:
+    - restart {{ apache_daemon }}
+
+- name: Create apache2 config
+  template: src=apache2.conf.j2 dest=/etc/apache2/apache2.conf
+  notify:
+    - restart {{ apache_daemon }}
+
+- name: Create PTC Takeo HTML
+  template: src=index.html.j2 dest=/var/www/html/index.html
+
+- name: Create symlink for suexec 
+  file: src=/usr/lib/apache2/suexec-custom dest=/usr/lib/apache2/suexec owner=www-data group=root state=link force=yes
+  notify:
+    - restart {{ apache_daemon }}
+    

@@ -1,0 +1,6 @@
+---
+
+- hosts: ptctakeo
+  become: true
+  roles:
+    - role: apache

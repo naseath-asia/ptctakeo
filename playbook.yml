@@ -1,0 +1,6 @@
+---
+
+- hosts: all
+
+
+- include: playbook_ptctakeo.yml
