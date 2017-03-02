@@ -1,0 +1,6 @@
+---
+# tasks file for projects
+- name: Create project user
+  user: name={{ item }} append=yes groups={{ item }} state=present generate_ssh_key=yes ssh_key_comment={{ item }}
+  with_item:
+    - training
