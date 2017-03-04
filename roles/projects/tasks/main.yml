@@ -1,6 +1,33 @@
 ---
 # tasks file for projects
 - name: Create project user
-  user: name={{ item }} append=yes groups={{ item }} state=present generate_ssh_key=yes ssh_key_comment={{ item }}
-  with_item:
+  user: name={{ item }} append=yes state=present generate_ssh_key=yes ssh_key_comment={{ item }}
+  with_items:
     - training
+
+- name: Create project folder
+  file: dest=/home/{{ item }}/public_html state=directory owner={{ item }} group=www-data mode=0775
+  with_items:
+    - training
+
+- name: Create project folder(s)
+  file: dest=/home/training/{{ item }} state=directory owner=training group=www-data mode=0775
+  with_items:
+    - backup
+    - conf
+    - log
+    - cgi-bin
+    - cgi-bin/php5-default
+
+- name: Install requir packages
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - python-mysqldb
+
+- name: Create database training
+  mysql_db:
+    name=training
+    state=present
+
+
+
