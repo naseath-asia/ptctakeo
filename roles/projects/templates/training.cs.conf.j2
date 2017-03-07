@@ -1,0 +1,31 @@
+<VirtualHost *:80>
+  DocumentRoot /home/training/public_html
+  ServerName training.cs
+  ServerAlias www.training.cs
+  SuexecUserGroup training training
+
+  LogLevel warn
+  ErrorLog /home/training/log/error_log
+  CustomLog /home/training/log/access_log combined
+
+  <Directory />
+    Options FollowSymLinks
+    AllowOverride All
+    Order allow,deny
+    allow from all
+    Require all granted
+  </Directory>
+
+  AddHandler php-fcgi .php
+  Action php-fcgi /fcgi-bin/php-fcgi-wrapper
+
+
+  # Turn on the fcgid-script handler for all files within the alias "/fcgi-bin/"
+  <Location /fcgi-bin/>
+    SetHandler fcgid-script
+    Options +ExecCGI
+  </Location>
+
+  RewriteEngine On
+  RewriteRule ^/fcgi-bin/[^/]*$ / [PT]
+</VirtualHost>

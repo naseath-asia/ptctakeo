@@ -24,10 +24,18 @@
   with_items:
     - python-mysqldb
 
+- name: Create mysql configuration
+  template: src=my.cnf.j2
+            dest=/root/.my.cnf
+
 - name: Create database training
   mysql_db:
     name=training
+    login_user=training
+    login_password=training
     state=present
 
-
+- name: Create training host file
+  template: src=training.cs.conf.j2
+            dest=/etc/apache2/sites-available/training.cs.conf
 
