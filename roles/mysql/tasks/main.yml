@@ -1,0 +1,27 @@
+---
+# tasks file for mysql
+
+- name: Copy my.cnf to /root/
+  template: src=my.cnf.j2
+            dest=/root/.my.cnf
+
+- name: Create mysql configuration
+  template: src=my.cnf.j2
+            dest=/etc/mysql/my.cnf
+            owner=root
+            group=root
+            mode=0640
+
+- name: install mysql-server and mysql-client 5.6
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - python-mysqldb
+    - mysql-server-5.6
+    - mysql-server-core-5.6
+    - mysql-client-5.6
+    - mysql-client-core-5.6
+  notify: restart mysql
+
+#Uncomment this task for first provision
+#- name: Update mysql root password
+#  mysql_user: login_user=root login_password='' name=root host=localhost password='ess:3' priv=*.*:ALL,GRANT

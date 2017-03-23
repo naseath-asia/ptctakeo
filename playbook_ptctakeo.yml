@@ -4,4 +4,6 @@
   become: true
   roles:
     - role: apache
+    - role: mysql
     - role: projects
+    

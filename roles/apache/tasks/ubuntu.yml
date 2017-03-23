@@ -2,11 +2,11 @@
 
 - name: Install Packages
   apt: name={{ item }} state=present
-  with_items: apache_packages
+  with_items: "{{ apache_packages }}"
 
 - name: Add modules
   apache2_module: name={{ item }} state=present
-  with_items: apache_modules
+  with_items: "{{ apache_modules }}"
 
 - name: Configure fcgi timeout
   lineinfile: dest=/etc/apache2/mods-available/fcgid.conf regexp="{{ item }}" insertafter="FcgidConnectTimeout" line="{{ item }}"
