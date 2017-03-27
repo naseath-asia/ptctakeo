@@ -2,7 +2,6 @@
   DocumentRoot /home/training/public_html
   ServerName training.cs
   ServerAlias www.training.cs
-  SuexecUserGroup training training
 
   LogLevel warn
   ErrorLog /home/training/log/error_log
@@ -15,9 +14,6 @@
     allow from all
     Require all granted
   </Directory>
-
-  AddHandler php-fcgi .php
-  Action php-fcgi /fcgi-bin/php-fcgi-wrapper
 
 
   # Turn on the fcgid-script handler for all files within the alias "/fcgi-bin/"

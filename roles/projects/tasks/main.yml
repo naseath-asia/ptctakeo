@@ -26,7 +26,40 @@
     name=training
     state=present
 
+- name: Grant access to db training for user training
+  mysql_user:
+    login_user=root
+    login_password=ess:3
+    name=training
+    password=training
+    priv='training.*:ALL,GRANT'
+    state=present
+
 - name: Create training host file
   template: src=training.cs.conf.j2
-            dest=/etc/apache2/sites-available/training.cs.conf
+            dest=/etc/apache2/sites-enabled/training.cs.conf
+
+- name: Restart service apache2
+  service: name=apache2 state=restarted
+
+# - name: Copy project to public_html_path
+#   copy: src=/home/naseath/data/naseath/training.cs/ dest=/home/training/public_html/
+#     owner=training
+#     group=training
+#     mode=0640
+
+- name: Change permission for public_html directory
+  file: dest=/home/training/public_html/ owner=training group=www-data mode=0775 recurse=yes
+
+- name: Copy sql file to server
+  copy: src=/home/naseath/data/naseath/20140430_training.sql dest=/tmp
+
+- name: Import DB
+  mysql_db:
+    login_user=training
+    login_password=training
+    name=training
+    state=import
+    target=/tmp/20140430_training.sql
+
 

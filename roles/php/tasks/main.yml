@@ -1,0 +1,11 @@
+---
+# tasks file for php
+
+- name: Enable modules
+  apache2_module: name={{ item }} state=present
+  with_items:
+     - php5
+
+- name: Restart apache2 
+  service: name=apache2 state=restarted
+

@@ -19,11 +19,6 @@
     - ' FcgidMaxRequestLen 100000000'
     - ' FcgidMaxRequestsPerProcess 50'
 
-- name: Disable modules
-  apache2_module: name={{ item }} state=absent
-  with_items:
-     - php5
-
 - name: Remove default vhost
   file: path=/etc/apache2/sites-enable/000-fefault.conf state=absent
 
