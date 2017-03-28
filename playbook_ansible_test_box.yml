@@ -1,0 +1,10 @@
+---
+
+- hosts: ansible-test-box
+  become: true
+  roles:
+    - role: apache
+    - role: mysql
+    - role: php
+    - role: projects
+    

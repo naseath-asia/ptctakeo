@@ -1,5 +1,11 @@
 ---
 
+- name: Update & Upgrade apt package
+  apt: upgrade=yes update_cache=yes cache_valid_time=3600
+
+- name: Install w3m
+  apt: pkg=w3m state=installed
+
 - name: Install Packages
   apt: name={{ item }} state=present
   with_items: "{{ apache_packages }}"
